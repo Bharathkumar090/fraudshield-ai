@@ -7,6 +7,11 @@ React and Vite frontend for FraudShield AI.
 Basic frontend shell with Tailwind CSS configured. No backend connection,
 authentication, or ML logic has been added yet.
 
+## Live URLs
+
+- Frontend: `https://fraudshield-ai-lime.vercel.app`
+- Backend API: `https://fraudshield-ai-1-1h87.onrender.com`
+
 ## Scripts
 
 - `npm run dev` starts the local development server.

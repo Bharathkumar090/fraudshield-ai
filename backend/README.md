@@ -2,6 +2,13 @@
 
 FastAPI backend for FraudShield AI upload validation, schema detection, model selection, fraud prediction, model metrics, and report downloads.
 
+## Live URLs
+
+- Frontend: `https://fraudshield-ai-lime.vercel.app`
+- Backend API: `https://fraudshield-ai-1-1h87.onrender.com`
+- Health check: `https://fraudshield-ai-1-1h87.onrender.com/health`
+- API docs: `https://fraudshield-ai-1-1h87.onrender.com/docs`
+
 ## Local Setup
 
 From the `backend` folder:

@@ -71,6 +71,13 @@ Generated model files, metrics, and reports are saved locally under `ml/artifact
 
 ## Setup Instructions
 
+## Live Deployment
+
+- Frontend: `https://fraudshield-ai-lime.vercel.app`
+- Backend API: `https://fraudshield-ai-1-1h87.onrender.com`
+- Backend health check: `https://fraudshield-ai-1-1h87.onrender.com/health`
+- Backend API docs: `https://fraudshield-ai-1-1h87.onrender.com/docs`
+
 Frontend:
 
 ```bash
@@ -107,6 +114,8 @@ Use these Vercel project settings for the React + Vite frontend:
 - Output Directory: `dist`
 - Install Command: `npm install`
 - Vercel environment variable: `VITE_API_BASE_URL=https://fraudshield-ai-1-1h87.onrender.com`
+- Live Frontend URL: `https://fraudshield-ai-lime.vercel.app`
+- Live Backend API URL: `https://fraudshield-ai-1-1h87.onrender.com`
 
 The frontend includes `frontend/vercel.json` with an SPA rewrite to `index.html` so React Router routes do not return Vercel `404: NOT_FOUND`.
 
