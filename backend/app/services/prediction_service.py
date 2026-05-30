@@ -11,9 +11,16 @@ import pandas as pd
 from fastapi import HTTPException, status
 
 
+BACKEND_ROOT = Path(__file__).resolve().parents[2]
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-ML_ROOT = PROJECT_ROOT / "ml"
-ARTIFACTS_DIR = ML_ROOT / "artifacts"
+PROJECT_ML_ROOT = PROJECT_ROOT / "ml"
+BACKEND_ML_ROOT = BACKEND_ROOT / "ml"
+ML_ROOT = PROJECT_ML_ROOT if PROJECT_ML_ROOT.exists() else BACKEND_ML_ROOT
+ARTIFACTS_DIR = (
+    PROJECT_ML_ROOT / "artifacts"
+    if (PROJECT_ML_ROOT / "artifacts").exists()
+    else BACKEND_ML_ROOT / "artifacts"
+)
 MODEL_PATH = ARTIFACTS_DIR / "model.pkl"
 PREPROCESSOR_PATH = ARTIFACTS_DIR / "preprocessor.pkl"
 FEATURE_COLUMNS_PATH = ARTIFACTS_DIR / "feature_columns.json"

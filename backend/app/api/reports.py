@@ -8,9 +8,20 @@ from fastapi.responses import FileResponse
 
 router = APIRouter(prefix="/reports", tags=["Reports"])
 
+BACKEND_ROOT = Path(__file__).resolve().parents[2]
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-ML_REPORTS_DIR = PROJECT_ROOT / "ml" / "reports"
-ML_ARTIFACTS_DIR = PROJECT_ROOT / "ml" / "artifacts"
+PROJECT_ML_ROOT = PROJECT_ROOT / "ml"
+BACKEND_ML_ROOT = BACKEND_ROOT / "ml"
+ML_REPORTS_DIR = (
+    PROJECT_ML_ROOT / "reports"
+    if (PROJECT_ML_ROOT / "reports").exists()
+    else BACKEND_ML_ROOT / "reports"
+)
+ML_ARTIFACTS_DIR = (
+    PROJECT_ML_ROOT / "artifacts"
+    if (PROJECT_ML_ROOT / "artifacts").exists()
+    else BACKEND_ML_ROOT / "artifacts"
+)
 MISSING_REPORT_DETAIL = "Report file is unavailable. Please train the model first."
 
 
