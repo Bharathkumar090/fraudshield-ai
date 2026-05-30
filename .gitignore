@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Node
+node_modules/
+frontend/node_modules/
+frontend/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# ML data and artifacts
+ml/data/*.csv
+ml/data/*.zip
+ml/data/*.txt
+ml/artifacts/*.pkl
+ml/artifacts/*.joblib
+ml/artifacts/*.json
+ml/reports/*.png
+ml/reports/*.pdf
+
+# Keep ML folder placeholders
+!ml/data/.gitkeep
+!ml/artifacts/.gitkeep
+!ml/reports/.gitkeep
+!ml/notebooks/.gitkeep
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
