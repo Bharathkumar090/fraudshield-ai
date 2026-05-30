@@ -17,7 +17,9 @@ class Settings(BaseModel):
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "https://fraudshield-ai-lime.vercel.app",
+        "https://frontend-five-snowy-73.vercel.app",
     )
+    cors_origin_regex: str = r"https://.*\.vercel\.app"
 
     def allowed_cors_origins(self) -> list[str]:
         """Return local and deployment frontend origins."""
