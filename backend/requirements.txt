@@ -1,7 +1,10 @@
 fastapi
 uvicorn[standard]
 pydantic
-python-multipart
 pandas
+numpy
 scikit-learn
+imbalanced-learn
 joblib
+matplotlib
+python-multipart

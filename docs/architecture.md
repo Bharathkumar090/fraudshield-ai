@@ -1,106 +1,113 @@
 # FraudShield AI Architecture
 
-FraudShield AI is organized as a modular full-stack fraud detection system. The frontend handles analyst workflows, the backend owns API validation and request orchestration, and the ML layer owns model training, artifacts, and prediction logic.
+FraudShield AI is a modular full-stack fraud detection platform. The React frontend provides analyst workflows, the FastAPI backend handles upload validation and API orchestration, and the ML layer owns dataset preparation, model training, evaluation, and prediction artifacts.
 
 ## Current v1 Architecture
 
 ```text
-Frontend Upload
-  -> Backend Upload API
+React Frontend
+  -> FastAPI Backend
+  -> Upload Service
+  -> Schema Detection
+  -> Model Selection
   -> ML Prediction Service
-  -> Backend Response
-  -> Frontend Results
+  -> Response Payload
+  -> Frontend Results, Analytics, and Downloads
 ```
 
-The current v1 implementation runs locally and keeps each layer separate:
+Current v1 components:
 
-- `frontend`: React + Vite dashboard, upload flow, analytics, transactions, model insights, audit logs, and settings UI.
-- `backend`: FastAPI app with health, model metrics, prediction, and upload endpoints.
-- `ml`: Scikit-learn pipeline for validation, preprocessing, training, evaluation, prediction, and artifact storage.
-- `docs`: Architecture and project documentation.
+- `frontend/`: React + Vite application with landing page, dashboard, upload flow, transactions, analytics, model insights, audit logs, and settings UI.
+- `backend/`: FastAPI app with health, model metrics, prediction, upload, and report download endpoints.
+- `ml/`: Scikit-learn pipelines for Kaggle-style and business-style fraud models, saved artifacts, metrics, and reports.
+- `docs/`: Architecture and project documentation.
 
 ## Data Flow
 
 ```text
-Frontend Upload -> Backend Upload API -> ML Prediction Service -> Response -> Frontend Results
+Frontend Upload -> Backend Upload API -> Schema Detection -> Model Selection -> ML Prediction Service -> Frontend Results
 ```
 
-1. A user selects a CSV, TXT, or ZIP file in the frontend Upload Transactions page.
-2. The frontend sends the file as `multipart/form-data` to `POST /upload/file`.
-3. The backend validates file type, file size, required transaction columns, and ZIP safety.
-4. Valid rows are passed to the backend prediction service.
-5. The prediction service loads local ML artifacts from `ml/artifacts`.
-6. The ML model returns fraud probability, prediction, risk level, and recommended action.
-7. The backend returns upload summary counts and row-level results.
-8. The frontend displays the summary, previews the first 10 results, and allows CSV download.
+1. A user uploads a CSV, TXT, or ZIP file from the Upload Transactions page.
+2. The frontend sends the file to `POST /upload/file` as `multipart/form-data`.
+3. The backend validates file type, file size, and ZIP safety.
+4. The upload service normalizes aliases and detects the transaction schema.
+5. Schema detection selects one of three outcomes: Kaggle-style, business-style, or unsupported.
+6. Model selection chooses the matching local model artifact when available.
+7. The prediction service returns fraud probability, prediction label, risk level, and recommended action.
+8. If labels are included, the backend calculates upload-specific precision, recall, F1-score, and confusion matrix.
+9. The frontend displays upload summary, schema report, model selection, evaluation, prediction preview, analytics, and CSV download.
 
-## Components
+## Supported Schemas
 
-Frontend:
-- Landing page
-- Dashboard layout with sidebar and topbar
-- Dashboard overview
-- Upload Transactions page
-- Transactions page
-- Analytics page
-- Model Insights page
-- Audit Logs page
-- Settings page
-- API service layer
+Kaggle-style credit card schema:
 
-Backend:
-- FastAPI application entry point
-- Health router
-- Model metrics router
-- Prediction router
-- Upload router
-- Pydantic schemas
-- Prediction service
-- Upload service
+```text
+Time, V1 to V28, Amount, Class optional
+```
 
-ML:
-- Dataset loading
-- Dataset validation
-- Preprocessing and scaling
-- Logistic Regression and Random Forest training
-- Model evaluation
-- Prediction utilities
-- Saved artifacts and reports
+This schema uses the Kaggle PCA-feature model.
 
-Artifacts:
-- `model.pkl`
-- `preprocessor.pkl`
-- `feature_columns.json`
-- `metrics.json`
-- confusion matrix, ROC curve, precision-recall curve, and feature importance reports
+Business-style transaction schema:
 
-## Current Constraints
+```text
+amount, merchant_category, is_international, hour, device_risk_score,
+customer_history_risk, failed_attempts, class optional
+```
 
-- No authentication is enforced yet.
-- No database persistence is connected yet.
-- Audit logs and API keys are frontend UI only.
-- Model reports are generated locally by the ML pipeline.
-- Uploaded prediction results are returned directly to the frontend and are not stored.
+This schema uses the readable business transaction model.
+
+Unsupported schemas return a clear validation response instead of crashing or running an incompatible model.
+
+## Backend Components
+
+- Health router: service status endpoint.
+- Model router: global Kaggle model metrics.
+- Prediction router: single and batch prediction APIs.
+- Upload router: multipart upload API for CSV, TXT, and ZIP files.
+- Reports router: downloadable ML report files.
+- Upload service: file validation, schema detection, model selection, row validation, and upload evaluation.
+- Prediction service: model artifact loading, threshold handling, and scoring.
+
+## ML Components
+
+- Kaggle pipeline: trains a model on `Time`, `V1` to `V28`, `Amount`, and `Class`.
+- Business data generator: creates synthetic readable transaction data.
+- Business pipeline: trains a separate model for business-style transaction fields.
+- Evaluation utilities: precision, recall, F1-score, ROC-AUC, PR-AUC, confusion matrix, ROC curve points, and precision-recall curve points.
+- Artifacts: local model, preprocessor, feature column, metrics, and report files.
+
+## Current v1 Constraints
+
+- Authentication is not implemented yet.
+- Database persistence is not connected yet.
+- Latest upload results are stored in frontend localStorage for v1.
+- Audit logs and API key settings are UI-only in the current version.
+- Model artifacts and reports are stored locally.
+- Large datasets and trained artifacts are intentionally excluded from GitHub.
 
 ## Planned v2 Architecture
 
-The v2 architecture will add production-oriented controls:
+v2 will add production-oriented controls and persistence:
 
 - JWT authentication and role-based access control
-- PostgreSQL persistence for users, transactions, predictions, and audit logs
-- Backend-managed API keys
-- Persisted upload history and result exports
-- Production CORS and environment-based configuration
-- Deployment for frontend and backend services
+- PostgreSQL persistence for users, transactions, predictions, uploads, and audit logs
+- Backend-validated API keys
+- Persisted transaction history and export history
+- Real audit log persistence for sensitive actions
+- Manual column mapping UI for unsupported or custom schemas
+- Cloud deployment for frontend and backend
 - PDF model reports
-- SHAP-based model explainability
+- SHAP explainability for model decisions
 
-Planned v2 data flow:
+Planned v2 flow:
 
 ```text
 Authenticated Frontend
   -> FastAPI Backend
   -> Upload Validation
+  -> Schema Detection And Column Mapping
+  -> Model Selection
   -> ML Prediction Service
   -> PostgreSQL Persistence
   -> Audit Logging
