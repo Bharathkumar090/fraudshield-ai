@@ -1,0 +1,9 @@
+[
+  "amount",
+  "merchant_category",
+  "is_international",
+  "hour",
+  "device_risk_score",
+  "customer_history_risk",
+  "failed_attempts"
+]
