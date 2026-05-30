@@ -1,12 +1,16 @@
 import axios from "axios";
 
-export const API_BASE_URL =
+const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 120000,
 });
+
+export function getApiBaseUrl() {
+  return API_BASE_URL;
+}
 
 export const MODEL_REPORT_DOWNLOADS = {
   confusionMatrix: {
@@ -47,6 +51,20 @@ export async function uploadTransactionFile(file, threshold) {
   }
 }
 
+export async function checkBackendHealth() {
+  try {
+    const response = await apiClient.get("/health");
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      getApiErrorMessage(error, {
+        offline: "Backend is unavailable. Please start the FastAPI server and try again.",
+        fallback: "Unable to check backend health. Please try again.",
+      }),
+    );
+  }
+}
+
 export async function getModelMetrics() {
   try {
     const response = await apiClient.get("/model/metrics");
@@ -80,6 +98,7 @@ export async function downloadModelReport(reportKey) {
 
 function getApiErrorMessage(error, messages = {}) {
   if (!error.response) {
+    logBackendUnavailable(error);
     return (
       messages.offline ||
       "Backend is unavailable. Please start the FastAPI server and try again."
@@ -102,6 +121,7 @@ function getApiErrorMessage(error, messages = {}) {
 
 async function getDownloadErrorMessage(error) {
   if (!error.response) {
+    logBackendUnavailable(error);
     return "Backend is unavailable. Please start the FastAPI server and try again.";
   }
 
@@ -125,6 +145,13 @@ async function readBlobErrorDetail(data) {
   } catch {
     return "";
   }
+}
+
+function logBackendUnavailable(error) {
+  console.error("FraudShield AI backend request failed", {
+    apiBaseUrl: getApiBaseUrl(),
+    message: error.message,
+  });
 }
 
 function downloadBlob(blob, filename) {

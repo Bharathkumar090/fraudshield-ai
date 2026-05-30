@@ -8,4 +8,4 @@ services:
     startCommand: python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: FRONTEND_ORIGIN
-        value: http://localhost:5173
+        value: https://fraudshield-ai-lime.vercel.app

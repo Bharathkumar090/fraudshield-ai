@@ -106,9 +106,11 @@ Use these Vercel project settings for the React + Vite frontend:
 - Build Command: `npm run build`
 - Output Directory: `dist`
 - Install Command: `npm install`
-- Environment Variable: `VITE_API_BASE_URL=https://fraudshield-ai-1-1h87.onrender.com`
+- Vercel environment variable: `VITE_API_BASE_URL=https://fraudshield-ai-1-1h87.onrender.com`
 
 The frontend includes `frontend/vercel.json` with an SPA rewrite to `index.html` so React Router routes do not return Vercel `404: NOT_FOUND`.
+
+After changing Vercel environment variables, redeploy the frontend because Vite reads environment variables at build time.
 
 ## API Endpoints
 

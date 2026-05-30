@@ -16,6 +16,7 @@ class Settings(BaseModel):
     cors_origins: tuple[str, ...] = (
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+        "https://fraudshield-ai-lime.vercel.app",
     )
 
     def allowed_cors_origins(self) -> list[str]:

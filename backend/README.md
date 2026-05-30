@@ -35,7 +35,7 @@ http://127.0.0.1:8000/docs
 Copy `.env.example` when configuring deployment values:
 
 ```text
-FRONTEND_ORIGIN=http://localhost:5173
+FRONTEND_ORIGIN=https://fraudshield-ai-lime.vercel.app
 ```
 
 Local frontend origins are allowed by default:
