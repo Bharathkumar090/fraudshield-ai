@@ -97,6 +97,19 @@ python -m src.generate_business_data
 python -m src.train_business_model
 ```
 
+## Vercel Frontend Deployment
+
+Use these Vercel project settings for the React + Vite frontend:
+
+- Framework Preset: Vite
+- Root Directory: `frontend`
+- Build Command: `npm run build`
+- Output Directory: `dist`
+- Install Command: `npm install`
+- Environment Variable: `VITE_API_BASE_URL=https://fraudshield-ai-1-1h87.onrender.com`
+
+The frontend includes `frontend/vercel.json` with an SPA rewrite to `index.html` so React Router routes do not return Vercel `404: NOT_FOUND`.
+
 ## API Endpoints
 
 - `GET /health`
